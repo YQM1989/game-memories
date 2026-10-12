@@ -8,10 +8,11 @@ async function fixture() {
   const frontmatter: Record<string, string> = { type: 'raw_switch_experience', platform: 'switch' };
   const file = { path: 'Switch/测试游戏.md' };
   const app = { metadataCache: { getFileCache: () => ({ frontmatter }) }, vault: { getAbstractFileByPath: () => file }, fileManager: { processFrontMatter: vi.fn(async (_file: unknown, update: (fm: Record<string, string>) => void) => update(frontmatter)) } };
-  const render = () => {
+  const render = async () => {
     const container = document.createElement('div'); document.body.append(container);
     const dv = { app, container, current: () => ({ file }), paragraph: (message: string) => { container.textContent = message; } };
-    new Function('dv', 'input', source)(dv, { mediaId: 'nintendo-' + 'a'.repeat(64) });
+    const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+    await new AsyncFunction('dv', 'input', source)(dv, { mediaId: 'nintendo-' + 'a'.repeat(64) });
     return container;
   };
   vi.stubGlobal('requestAnimationFrame', (callback: () => void) => callback());
@@ -19,20 +20,20 @@ async function fixture() {
 }
 
 it('edits the right-hand memory without a page editor and persists only its property on blur', async () => {
-  const f = await fixture(); const container = f.render();
+  const f = await fixture(); const container = await f.render();
   const area = container.querySelector('textarea')!;
   fireEvent.input(area, { target: { value: '我的真实感想\n第二行' } });
   fireEvent.blur(area);
   await waitFor(() => expect(f.frontmatter[f.key]).toBe('我的真实感想\n第二行'));
   expect(f.frontmatter.type).toBe('raw_switch_experience');
   expect(container.textContent).toContain('已保存');
-  expect(f.render().querySelector('textarea')!.value).toBe('我的真实感想\n第二行');
+  expect((await f.render()).querySelector('textarea')!.value).toBe('我的真实感想\n第二行');
 });
 
 it('keeps unsaved drafts through rerender and prevents overwriting another edit', async () => {
-  const f = await fixture(); const first = f.render();
+  const f = await fixture(); const first = await f.render();
   fireEvent.input(first.querySelector('textarea')!, { target: { value: '尚未保存的输入' } });
-  const next = f.render();
+  const next = await f.render();
   expect(next.querySelector('textarea')!.value).toBe('尚未保存的输入');
   f.frontmatter[f.key] = '其他位置保存的内容';
   fireEvent.click(next.querySelector('button')!);

@@ -1,6 +1,6 @@
 [package]
 name = "steam-experience-sync"
-version = "0.2.0"
+version = "0.2.1"
 description = "Steam and Nintendo Switch game memories in Obsidian"
 authors = ["YQM"]
 edition = "2021"

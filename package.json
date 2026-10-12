@@ -1,6 +1,6 @@
 {
   "name": "game-memories",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "Collect Steam and Nintendo Switch game memories in Obsidian.",
   "bin": {

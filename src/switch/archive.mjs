@@ -155,7 +155,11 @@ export function mediaCard(item, attachment, reflectionView) {
 }
 
 export function appendCard(content, item, attachment, reflectionView) {
-  if (content.includes(`%% switch-media:${item.id} %%`)) return content;
+  if (content.includes(`%% switch-media:${item.id} %%`) || content.includes(`%% switch-deleted:${item.id} `)) return content;
+  const trashStart = content.indexOf('%% switch-trash:start %%');
+  if (trashStart >= 0) {
+    return appendCard(content.slice(0, trashStart), item, attachment, reflectionView).trimEnd() + '\n\n' + content.slice(trashStart);
+  }
   const date = item.capturedAt.slice(0, 10);
   const heading = `## ${date}`;
   const lines = content.split('\n');

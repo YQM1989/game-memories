@@ -94,7 +94,14 @@ export async function runSwitchAction(action, payload = {}, projectRoot = root, 
   const logFile = await vaultPath(vault, '.obsidian/switch-experience-sync/worker.log');
   const state = await readJson(stateFile, EMPTY_STATE());
   if (action === 'status') {
-    const savedMedia = Object.values(state.media).filter((item) => !item.duplicateOf);
+    const deleted = new Set();
+    for (const game of Object.values(state.games)) {
+      try {
+        const content = await fs.readFile(await vaultPath(vault, game.note), 'utf8');
+        for (const match of content.matchAll(/^%% switch-deleted:((?:nintendo|local)-[a-f0-9]{64}) /gm)) deleted.add(match[1]);
+      } catch (error) { if (error.code !== 'ENOENT') throw error; }
+    }
+    const savedMedia = Object.entries(state.media).filter(([id, item]) => !item.duplicateOf && !deleted.has(id)).map(([, item]) => item);
     return {
       configured: true,
       running: await isWorkerLockActive(lockFile, { staleMs: Number.MAX_SAFE_INTEGER }),

@@ -41,7 +41,7 @@ export function bundledAlbumClient(config, credentials = {}, options = {}) {
       PATH: process.env.PATH || '',
       NXAPI_DATA_PATH: path.join(path.dirname(process.env.STEAM_GUI_CONFIG_FILE || path.join(projectRoot, '.steam-experience-sync/config.json')), 'nxapi-private-memory'),
       NXAPI_DEBUG_FILE: '0', NXAPI_SKIP_UPDATE_CHECK: '1',
-      NXAPI_USER_AGENT: 'game-memories/0.2.0 (+https://github.com/YQM1989/game-memories)',
+      NXAPI_USER_AGENT: 'game-memories/0.2.1 (+https://github.com/YQM1989/game-memories)',
     };
     for (const key of ['TMPDIR', 'TEMP', 'TMP', 'LANG', 'HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY']) if (process.env[key]) environment[key] = process.env[key];
     const output = await new Promise((resolve, reject) => {

@@ -17,7 +17,7 @@ try {
     STEAM_GUI_CONFIG_FILE: configFile,
     NXAPI_DEBUG_FILE: '0',
     NXAPI_SKIP_UPDATE_CHECK: '1',
-    NXAPI_USER_AGENT: 'game-memories-bundle-check/0.2.0 (+https://github.com/YQM1989/game-memories)',
+    NXAPI_USER_AGENT: 'game-memories-bundle-check/0.2.1 (+https://github.com/YQM1989/game-memories)',
   };
   function run(args) {
     const result = spawnSync(node, args, { cwd: worker, env, encoding: 'utf8', timeout: 30000 });
